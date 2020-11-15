@@ -13,12 +13,12 @@ import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class DES_CFB {
+public class DES_CFB{
 	private static Cipher encryptCipher;
 	private static Cipher decryptCipher;
 	private static final byte[] iv = { 11, 22, 33, 44, 99, 88, 77, 66 };
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
   try{
 	File f1 = new File("Message.txt");
 	File f2 = new File("Alice.txt");
@@ -40,9 +40,6 @@ public class DES_CFB {
   Scanner in = new Scanner(System.in);
   System.out.print("Enter Text : ");
   String str = in.nextLine();
-  System.out.print("Enter Key (11 digits) : ");
-  String s = in.nextLine();
-  String str1 = s+"=";
   System.out.println("Choose Option :\n1.Encryption\n2.Decryption");
   int a = in.nextInt();
   if(a==1)
@@ -61,17 +58,12 @@ public class DES_CFB {
 	String clearTextNewFile = "Bob.txt";
 		try {
 			String st = "94926483";
-			/* Decodes a Base64 encoded String into a byte array */
-			  byte[] decodedKey = Base64.getDecoder().decode(str1);
-
-			  /* Constructs a secret key from the given byte array */
-			  SecretKey key = new SecretKeySpec(decodedKey,0, decodedKey.length, "DES");
-			// create SecretKey using KeyGenerator
-//			SecretKey key = KeyGenerator.getInstance("DES").generateKey();
+			//create SecretKey using KeyGenerator
+			SecretKey key = KeyGenerator.getInstance("DES").generateKey();
 			AlgorithmParameterSpec paramSpec = new IvParameterSpec(st.getBytes());
-//			
-//			String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
-//			System.out.println("Key : "+encodedKey);
+			
+			String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
+			System.out.println("Key : "+encodedKey);
 			
 			// get Cipher instance and initiate in encrypt mode
 			encryptCipher = Cipher.getInstance("DES/CFB/PKCS5Padding");
@@ -93,8 +85,10 @@ public class DES_CFB {
 			e.printStackTrace();
 		}
 	}
-	if(a==2)
+  else if(a==2)
 	  {
+	  System.out.print("Enter Key (12 Characters) : ");
+	  String str1 = in.next();
 		String clearTextFile = "Message.txt";
 		String cipherTextFile = "Alice.txt";
 		String clearTextNewFile = "Bob.txt";
@@ -140,5 +134,9 @@ public class DES_CFB {
 				e.printStackTrace();
 			}
 		}
-		}
+  		else
+  		{
+  			System.out.println("Invalid Choice");
+  		}
+	}
 }
